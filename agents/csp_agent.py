@@ -3,6 +3,11 @@
 # Responsabilidade: resolver o Sudoku usando
 # Backtracking + AC-3 (propagação de restrições)
 # + MRV (heurística de seleção de variável).
+#
+# Correções aplicadas em relação ao código original:
+# 1. Apenas células vazias entram nas variáveis
+# 2. MRV usa domínio disponível no momento (dinâmico)
+# 3. Tracker integrado: nós, backtracks e steps
 # ==================================================
 
 from collections import deque
@@ -115,6 +120,7 @@ class CSPAgent:
         if result:
             # Aplica solução no grid do board
             self.board.apply_solution(result)
+            self.tracker.final_conflicts = 0
             self.tracker.stop(solved=True)
             return self.board.grid
         else:
