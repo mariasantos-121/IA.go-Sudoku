@@ -98,3 +98,6 @@ def modo_terminal():
 if __name__ == "__main__":
     if "--terminal" in sys.argv:
         modo_terminal()
+    else:
+        from interface.gui import rodar_interface
+        rodar_interface()
