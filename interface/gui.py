@@ -4,27 +4,10 @@ import copy
 import threading
 
 from environment.board import SudokuBoard
+from environment.puzzles import PUZZLES
 from metrics.tracker import Tracker
 from agents.csp_agent import CSPAgent
 from agents.hill_climbing_agent import HillClimbingAgent
-
-PUZZLES = {
-    "Fácil": [
-        [0,0,0,2,6,0,7,0,1],[6,8,0,0,7,0,0,9,0],[1,9,0,0,0,4,5,0,0],
-        [8,2,0,1,0,0,0,4,0],[0,0,4,6,0,2,9,0,0],[0,5,0,0,0,3,0,2,8],
-        [0,0,9,3,0,0,0,7,4],[0,4,0,0,5,0,0,3,6],[7,0,3,0,1,8,0,0,0],
-    ],
-    "Médio": [
-        [5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],
-        [8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],
-        [0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9],
-    ],
-    "Difícil": [
-        [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,3,0,8,5],[0,0,1,0,2,0,0,0,0],
-        [0,0,0,5,0,7,0,0,0],[0,0,4,0,0,0,1,0,0],[0,9,0,0,0,0,0,0,0],
-        [5,0,0,0,0,0,0,7,3],[0,0,2,0,1,0,0,0,0],[0,0,0,0,4,0,0,0,9],
-    ],
-}
 
 WIDTH, HEIGHT = 1200, 700
 
@@ -78,7 +61,7 @@ class Button:
     def is_clicked(self, pos):
         return self.rect.collidepoint(pos)
 
-def draw_grid(surface, x, y, size, current_grid, initial_grid, font, title_font, title, summary=None):
+def draw_grid(surface, x, y, size, current_grid, initial_grid, font, title_font, font_sm, title, summary=None):
     cell_size = size / 9
 
     pygame.draw.rect(surface, WHITE, (x, y, size, size))
@@ -102,7 +85,6 @@ def draw_grid(surface, x, y, size, current_grid, initial_grid, font, title_font,
                 surface.blit(text, text_rect)
 
     if summary:
-        font_sm = pygame.font.SysFont("Arial", 16)
         stats = [
             f"Resolvido: {'Sim' if summary.get('solved') else 'Não'}",
             f"Tempo: {summary.get('time_sec', 0)}s",
@@ -127,6 +109,7 @@ def rodar_interface():
     font_ui = pygame.font.SysFont("Arial", 18)
     font_title = pygame.font.SysFont("Arial", 22, bold=True)
     font_status = pygame.font.SysFont("Arial", 16)
+    font_sm = pygame.font.SysFont("Arial", 16)
     font_main_title = pygame.font.SysFont("Arial", 28, bold=True)
 
     selected_puzzle = "Fácil"
@@ -362,7 +345,7 @@ def rodar_interface():
             g_size = 450
             gx = (main_area_w - g_size) / 2
             gy = (HEIGHT - g_size) / 2 - 20
-            draw_grid(screen, gx, gy, g_size, grid_1, initial_grid, font_board_large, font_title, title_1, summary_1 if not animating else None)
+            draw_grid(screen, gx, gy, g_size, grid_1, initial_grid, font_board_large, font_title, font_sm, title_1, summary_1 if not animating else None)
         else:
             g_size   = 380
             spacing  = 40
@@ -371,8 +354,8 @@ def rodar_interface():
             gx2 = gx1 + g_size + spacing
             gy  = (HEIGHT - g_size) / 2 - 40
 
-            draw_grid(screen, gx1, gy, g_size, grid_1, initial_grid, font_board_small, font_title, title_1, summary_1 if not animating else None)
-            draw_grid(screen, gx2, gy, g_size, grid_2, initial_grid, font_board_small, font_title, title_2, summary_2 if not animating else None)
+            draw_grid(screen, gx1, gy, g_size, grid_1, initial_grid, font_board_small, font_title, font_sm, title_1, summary_1 if not animating else None)
+            draw_grid(screen, gx2, gy, g_size, grid_2, initial_grid, font_board_small, font_title, font_sm, title_2, summary_2 if not animating else None)
 
         pygame.display.flip()
 
