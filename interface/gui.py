@@ -163,6 +163,7 @@ def rodar_interface():
     animating    = False
     is_solving   = False
     thread_results = {}
+    solve_event  = threading.Event()
     step_index_1 = 0
     step_index_2 = 0
     step_skip_1  = 1
@@ -243,6 +244,7 @@ def rodar_interface():
                     summary_1 = None
                     summary_2 = None
                     thread_results.clear()
+                    solve_event.clear()
                     is_solving = True
 
                     _agent = selected_agent
@@ -257,11 +259,11 @@ def rodar_interface():
                             s2, d2, g2 = solve_agent("HC", grid)
                             thread_results['1'] = (s1, d1, g1)
                             thread_results['2'] = (s2, d2, g2)
-                        thread_results['done'] = True
+                        solve_event.set()
 
                     threading.Thread(target=_solve_worker, daemon=True).start()
 
-        if is_solving and thread_results.get('done'):
+        if is_solving and solve_event.is_set():
             is_solving = False
             if selected_agent in ["CSP", "HC"]:
                 steps_1, summary_1, f_grid = thread_results['1']

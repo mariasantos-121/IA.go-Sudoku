@@ -8,7 +8,8 @@ class CSPAgent:
         self.board   = board
         self.tracker = tracker
 
-        self.variables = self.board.get_empty_cells()
+        self.variables     = self.board.get_empty_cells()
+        self._initial_cells = self.board.get_initial_cells()
 
         self.domains = {
             var: set(range(1, 10))
@@ -48,7 +49,7 @@ class CSPAgent:
             xj_domain = self.domains[xj]
 
         for x in set(self.domains[xi]):
-            if not any(x != y for y in xj_domain):
+            if not any(x == y for y in xj_domain):
                 self.domains[xi].discard(x)
                 revised = True
 
@@ -82,7 +83,7 @@ class CSPAgent:
     def _backtrack(self, assignment: dict) -> dict | None:
         self.tracker.increment_nodes()
 
-        if len(assignment) == len(self.variables) + len(self.board.get_initial_cells()):
+        if len(assignment) == len(self.variables) + len(self._initial_cells):
             return assignment
 
         var = self._select_unassigned_variable(assignment)
@@ -92,11 +93,14 @@ class CSPAgent:
                 assignment[var] = value
                 self._record_snapshot(assignment)
 
+                saved_domains = {v: set(d) for v, d in self.domains.items()}
+
                 result = self._backtrack(assignment)
                 if result:
                     return result
 
                 del assignment[var]
+                self.domains = saved_domains
                 self.tracker.increment_backtracks()
 
         return None

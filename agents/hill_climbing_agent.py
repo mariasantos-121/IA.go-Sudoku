@@ -113,6 +113,11 @@ class HillClimbingAgent:
             conflicts += 9 - len(set(row))
             conflicts += 9 - len(set(col))
 
+        for box_r in range(0, 9, 3):
+            for box_c in range(0, 9, 3):
+                box = [grid[box_r + r][box_c + c] for r in range(3) for c in range(3)]
+                conflicts += 9 - len(set(box))
+
         return conflicts
 
     def _best_neighbor(
