@@ -1,6 +1,3 @@
-# ==================================================
-# metrics/tracker.py
-# ==================================================
 import time
 
 class Tracker:
@@ -11,7 +8,7 @@ class Tracker:
         self.end_time         = None
         self.steps            = []
         self.solved           = False
-        self.final_conflicts  = -1   # -1 = não computado
+        self.final_conflicts  = -1
 
     def start(self):
         self.nodes           = 0
@@ -42,12 +39,12 @@ class Tracker:
 
     def summary(self) -> dict:
         return {
-            "solved"           : self.solved,
-            "nodes"            : self.nodes,
-            "backtracks"       : self.backtracks,
-            "time_sec"         : self.elapsed(),
-            "steps"            : len(self.steps),
-            "final_conflicts"  : self.final_conflicts,
+            "solved"          : self.solved,
+            "nodes"           : self.nodes,
+            "backtracks"      : self.backtracks,
+            "time_sec"        : self.elapsed(),
+            "steps"           : len(self.steps),
+            "final_conflicts" : self.final_conflicts,
         }
 
     def print_summary(self, agent_name: str = "Agente"):
